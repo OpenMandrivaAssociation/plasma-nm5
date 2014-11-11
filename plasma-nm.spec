@@ -1,11 +1,14 @@
+%define major %(echo %{version} |cut -d. -f1-3)
+%define stable %([ "`echo %{version} |cut -d. -f3`" -ge 80 ] && echo -n un; echo -n stable)
+
 Summary:	Plasma applet written in QML for managing network connections
 Name:		plasma-nm5
-Version:	5.0.95
+Version:	5.1.0.1
 Release:	1
 License:	GPLv2+
 Group:		Graphical desktop/KDE
 Url:		https://projects.kde.org/projects/playground/network/plasma-nm
-Source0:	ftp://ftp.kde.org/pub/kde/stable/plasma/%{version}/plasma-nm-%{version}.tar.xz
+Source0:	ftp://ftp.kde.org/pub/kde/%{stable}/plasma/%{major}/plasma-nm-%{version}.tar.xz
 BuildRequires:	mobile-broadband-provider-info
 BuildRequires:	pkgconfig(libnm-glib)
 BuildRequires:	pkgconfig(libnm-util)
@@ -32,6 +35,7 @@ BuildRequires:	cmake(KF5Init)
 BuildRequires:	cmake(KF5KDELibs4Support)
 BuildRequires:	pkgconfig(NetworkManager) >= 0.9.8
 BuildRequires:	pkgconfig(openconnect) >= 3.99
+BuildRequires:	ninja
 Requires:	mobile-broadband-provider-info
 Requires:	modemmanager
 Requires:	networkmanager
@@ -61,14 +65,14 @@ the default NetworkManager service.
 #----------------------------------------------------------------------------
 
 %prep
-%setup -q -n plasma-nm-%{version}
+%setup -qn plasma-nm-%{version}
 
 %build
-%cmake
-%make
+%cmake -G Ninja
+ninja
 
 %install
-%makeinstall_std -C build
+DESTDIR="%{buildroot}" ninja -C build install
 
 %find_lang \
 	kde5-nm-connection-editor \
