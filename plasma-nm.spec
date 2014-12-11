@@ -50,9 +50,9 @@ the default NetworkManager service.
 %files -f %{name}.lang
 %{_bindir}/kde5-nm-connection-editor
 %{_libdir}/libplasmanm_*.so
-%{_libdir}/plugins/kded_networkmanagement.so
-%{_libdir}/plugins/libplasmanetworkmanagement_*.so
-%{_libdir}/qml/org/kde/plasma/networkmanagement
+%{_libdir}/qt5/plugins/kded_networkmanagement.so
+%{_libdir}/qt5/plugins/libplasmanetworkmanagement_*.so
+%{_libdir}/qt5/qml/org/kde/plasma/networkmanagement
 %{_datadir}/applications/kde5-nm-connection-editor.desktop
 %{_datadir}/kxmlgui5/kde5-nm-connection-editor
 %{_datadir}/knotifications5/networkmanagement.notifyrc
@@ -68,7 +68,8 @@ the default NetworkManager service.
 %setup -qn plasma-nm-%{version}
 
 %build
-%cmake -G Ninja
+%cmake -G Ninja \
+	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
 ninja
 
 %install
