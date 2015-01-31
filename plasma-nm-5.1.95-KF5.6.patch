@@ -1,5 +1,45 @@
---- plasma-nm-5.1.95/libs/editor/settings/btwidget.cpp.omv~	2015-01-24 23:24:05.542676974 +0100
-+++ plasma-nm-5.1.95/libs/editor/settings/btwidget.cpp	2015-01-24 23:24:33.059312423 +0100
+--- plasma-nm-5.2.0/editor/connectioneditor.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/editor/connectioneditor.cpp	2015-01-31 11:51:35.119122875 +0100
+@@ -298,7 +298,7 @@ void ConnectionEditor::addConnection(QAc
+                             if (wifiDev) {
+                                 if (wifiDev->wirelessCapabilities().testFlag(NetworkManager::WirelessDevice::ApCap)) {
+                                     wifiSetting->setMode(NetworkManager::WirelessSetting::Ap);
+-                                    wifiSetting->setMacAddress(NetworkManager::macAddressFromString(wifiDev->hardwareAddress()));
++                                    wifiSetting->setMacAddress(NetworkManager::Utils::macAddressFromString(wifiDev->hardwareAddress()));
+                                 }
+                             }
+                         }
+--- plasma-nm-5.2.0/kded/bluetoothmonitor.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/kded/bluetoothmonitor.cpp	2015-01-31 11:52:59.344592936 +0100
+@@ -187,7 +187,7 @@ void BluetoothMonitor::addBluetoothConne
+                     Q_FOREACH(const NetworkManager::Connection::Ptr &con, NetworkManager::listConnections()) {
+                         if (con && con->settings() && con->settings()->connectionType() == NetworkManager::ConnectionSettings::Bluetooth) {
+                             NetworkManager::BluetoothSetting::Ptr btSetting = con->settings()->setting(NetworkManager::Setting::Bluetooth).staticCast<NetworkManager::BluetoothSetting>();
+-                            if (btSetting->bluetoothAddress() == NetworkManager::macAddressFromString(bdAddr)) {
++                            if (btSetting->bluetoothAddress() == NetworkManager::Utils::macAddressFromString(bdAddr)) {
+                                 exists = true;
+                                 break;
+                             }
+@@ -200,7 +200,7 @@ void BluetoothMonitor::addBluetoothConne
+                             connectionSettings.setUuid(NetworkManager::ConnectionSettings::createNewUuid());
+                             connectionSettings.setId(deviceName);
+                             NetworkManager::BluetoothSetting::Ptr btSetting = connectionSettings.setting(NetworkManager::Setting::Bluetooth).staticCast<NetworkManager::BluetoothSetting>();
+-                            btSetting->setBluetoothAddress(NetworkManager::macAddressFromString(bdAddr));
++                            btSetting->setBluetoothAddress(NetworkManager::Utils::macAddressFromString(bdAddr));
+                             btSetting->setProfileType(NetworkManager::BluetoothSetting::Panu);
+                             btSetting->setInitialized(true);
+ 
+@@ -219,7 +219,7 @@ void BluetoothMonitor::addBluetoothConne
+                                     connectionSettings.setUuid(NetworkManager::ConnectionSettings::createNewUuid());
+                                     connectionSettings.setId(deviceName);
+                                     NetworkManager::BluetoothSetting::Ptr btSetting = connectionSettings.setting(NetworkManager::Setting::Bluetooth).staticCast<NetworkManager::BluetoothSetting>();
+-                                    btSetting->setBluetoothAddress(NetworkManager::macAddressFromString(bdAddr));
++                                    btSetting->setBluetoothAddress(NetworkManager::Utils::macAddressFromString(bdAddr));
+                                     btSetting->setProfileType(NetworkManager::BluetoothSetting::Dun);
+                                     btSetting->setInitialized(true);
+ 
+--- plasma-nm-5.2.0/libs/editor/settings/btwidget.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/settings/btwidget.cpp	2015-01-31 11:51:35.117122864 +0100
 @@ -54,7 +54,7 @@ void BtWidget::loadConfig(const NetworkM
  {
      NetworkManager::BluetoothSetting::Ptr btSetting = setting.staticCast<NetworkManager::BluetoothSetting>();
@@ -18,8 +58,8 @@
      btSetting.setProfileType(static_cast<NetworkManager::BluetoothSetting::ProfileType>(m_ui->type->itemData(m_ui->type->currentIndex()).toInt()));
  
      return btSetting.toMap();
---- plasma-nm-5.1.95/libs/editor/settings/infinibandwidget.cpp.omv~	2015-01-24 23:25:19.732345119 +0100
-+++ plasma-nm-5.1.95/libs/editor/settings/infinibandwidget.cpp	2015-01-24 23:29:46.648370040 +0100
+--- plasma-nm-5.2.0/libs/editor/settings/infinibandwidget.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/settings/infinibandwidget.cpp	2015-01-31 11:51:35.117122864 +0100
 @@ -61,7 +61,7 @@ void InfinibandWidget::loadConfig(const
              m_ui->transport->setCurrentIndex(1);
          }
@@ -38,8 +78,8 @@
      if (m_ui->mtu->value()) {
          setting.setMtu(m_ui->mtu->value());
      }
---- plasma-nm-5.1.95/libs/editor/settings/wificonnectionwidget.cpp.omv~	2015-01-24 23:27:01.162414523 +0100
-+++ plasma-nm-5.1.95/libs/editor/settings/wificonnectionwidget.cpp	2015-01-24 23:31:38.480609615 +0100
+--- plasma-nm-5.2.0/libs/editor/settings/wificonnectionwidget.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/settings/wificonnectionwidget.cpp	2015-01-31 11:51:35.117122864 +0100
 @@ -66,17 +66,17 @@ void WifiConnectionWidget::loadConfig(co
      }
      modeChanged(wifiSetting->mode());
@@ -103,8 +143,8 @@
      } else {
          qCWarning(PLASMA_NM) << Q_FUNC_INFO << "Unhandled band number" << band;
          return;
---- plasma-nm-5.1.95/libs/editor/settings/wifisecurity.cpp.omv~	2015-01-24 23:33:27.073424286 +0100
-+++ plasma-nm-5.1.95/libs/editor/settings/wifisecurity.cpp	2015-01-24 23:42:42.587460226 +0100
+--- plasma-nm-5.2.0/libs/editor/settings/wifisecurity.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/settings/wifisecurity.cpp	2015-01-31 11:51:35.118122870 +0100
 @@ -82,13 +82,13 @@ bool WifiSecurity::isValid() const
      const int securityIndex = m_ui->securityCombo->currentIndex();
  
@@ -122,8 +162,8 @@
      }
  
      return true;
---- plasma-nm-5.1.95/libs/editor/settings/wimaxwidget.cpp.omv~	2015-01-24 23:37:08.270230869 +0100
-+++ plasma-nm-5.1.95/libs/editor/settings/wimaxwidget.cpp	2015-01-24 23:39:48.212862881 +0100
+--- plasma-nm-5.2.0/libs/editor/settings/wimaxwidget.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/settings/wimaxwidget.cpp	2015-01-31 11:51:35.118122870 +0100
 @@ -52,7 +52,7 @@ void WimaxWidget::loadConfig(const Netwo
      NetworkManager::WimaxSetting::Ptr wimaxSetting = setting.staticCast<NetworkManager::WimaxSetting>();
  
@@ -142,8 +182,8 @@
  
      return wimaxSetting.toMap();
  }
---- plasma-nm-5.1.95/libs/editor/settings/wiredconnectionwidget.cpp.omv~	2015-01-24 23:32:25.317441761 +0100
-+++ plasma-nm-5.1.95/libs/editor/settings/wiredconnectionwidget.cpp	2015-01-24 23:40:08.362054940 +0100
+--- plasma-nm-5.2.0/libs/editor/settings/wiredconnectionwidget.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/settings/wiredconnectionwidget.cpp	2015-01-31 11:51:35.118122870 +0100
 @@ -58,10 +58,10 @@ void WiredConnectionWidget::loadConfig(c
  {
      NetworkManager::WiredSetting::Ptr wiredSetting = setting.staticCast<NetworkManager::WiredSetting>();
@@ -188,8 +228,8 @@
              return false;
          }
      }
---- plasma-nm-5.1.95/libs/editor/widgets/bssidcombobox.cpp.omv~	2015-01-24 23:40:49.540440468 +0100
-+++ plasma-nm-5.1.95/libs/editor/widgets/bssidcombobox.cpp	2015-01-24 23:41:26.101775854 +0100
+--- plasma-nm-5.2.0/libs/editor/widgets/bssidcombobox.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/widgets/bssidcombobox.cpp	2015-01-31 11:51:35.118122870 +0100
 @@ -60,7 +60,7 @@ bool BssidComboBox::isValid() const
          return true;
      }
@@ -208,8 +248,8 @@
          addItem(text, QVariant::fromValue(ap->hardwareAddress()));
      }
  }
---- plasma-nm-5.1.95/libs/editor/widgets/hwaddrcombobox.cpp.omv~	2015-01-24 23:25:47.719938898 +0100
-+++ plasma-nm-5.1.95/libs/editor/widgets/hwaddrcombobox.cpp	2015-01-24 23:25:52.526039038 +0100
+--- plasma-nm-5.2.0/libs/editor/widgets/hwaddrcombobox.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/widgets/hwaddrcombobox.cpp	2015-01-31 11:51:35.118122870 +0100
 @@ -48,7 +48,7 @@ bool HwAddrComboBox::isValid() const
          return true;
      }
@@ -219,8 +259,8 @@
  }
  
  QString HwAddrComboBox::hwAddress() const
---- plasma-nm-5.1.95/libs/editor/widgets/ssidcombobox.cpp.omv~	2015-01-24 23:28:34.058130004 +0100
-+++ plasma-nm-5.1.95/libs/editor/widgets/ssidcombobox.cpp	2015-01-24 23:39:10.680498323 +0100
+--- plasma-nm-5.2.0/libs/editor/widgets/ssidcombobox.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/editor/widgets/ssidcombobox.cpp	2015-01-31 11:51:35.118122870 +0100
 @@ -144,8 +144,8 @@ void SsidComboBox::addSsidsToCombo(const
                      longestSsid = network->ssid();
                  }
@@ -232,8 +272,8 @@
                      const QString text = i18n("%1 (%2%)\nSecurity: %3\nFrequency: %4 Mhz", accessPoint->ssid(), network->signalStrength(), UiUtils::labelFromWirelessSecurity(security), accessPoint->frequency());
                      addItem(QIcon::fromTheme("object-locked"), text, accessPoint->ssid());
                  } else {
---- plasma-nm-5.1.95/libs/handler.cpp.omv~	2015-01-24 23:49:32.475254047 +0100
-+++ plasma-nm-5.1.95/libs/handler.cpp	2015-01-24 23:56:35.053658429 +0100
+--- plasma-nm-5.2.0/libs/handler.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/handler.cpp	2015-01-31 11:51:35.118122870 +0100
 @@ -161,20 +161,20 @@ void Handler::addAndActivateConnection(c
      }
      NetworkManager::WirelessSecuritySetting::Ptr wifiSecurity = settings->setting(NetworkManager::Setting::WirelessSecurity).dynamicCast<NetworkManager::WirelessSecuritySetting>();
@@ -272,8 +312,8 @@
              wifiSecurity->setKeyMgmt(NetworkManager::WirelessSecuritySetting::Wep);
              wifiSecurity->setWepKey0(password);
              if (KWallet::Wallet::isEnabled()) {
---- plasma-nm-5.1.95/libs/models/networkmodel.cpp.omv~	2015-01-24 23:57:28.514999818 +0100
-+++ plasma-nm-5.1.95/libs/models/networkmodel.cpp	2015-01-25 00:19:03.418249921 +0100
+--- plasma-nm-5.2.0/libs/models/networkmodel.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/models/networkmodel.cpp	2015-01-31 11:53:35.589808932 +0100
 @@ -428,7 +428,7 @@ void NetworkModel::addConnection(const N
  
          if (item->type() == NetworkManager::ConnectionSettings::Wireless) {
@@ -334,14 +374,14 @@
 @@ -1119,7 +1119,7 @@ void NetworkModel::updateFromWirelessNet
          if (wirelessSetting) {
              if (!wirelessSetting->bssid().isEmpty()) {
-                 foreach (const NetworkManager::AccessPoint::Ptr ap, network->accessPoints()) {
+                 Q_FOREACH(const NetworkManager::AccessPoint::Ptr ap, network->accessPoints()) {
 -                    if (ap->hardwareAddress() == NetworkManager::macAddressAsString(wirelessSetting->bssid())) {
 +                    if (ap->hardwareAddress() == NetworkManager::Utils::macAddressAsString(wirelessSetting->bssid())) {
                          item->setSignal(ap->signalStrength());
                          item->setSpecificPath(ap->uni());
                          // We need to watch this AP for signal changes
---- plasma-nm-5.1.95/libs/models/networkmodel.h.omv~	2015-01-24 23:59:13.424715788 +0100
-+++ plasma-nm-5.1.95/libs/models/networkmodel.h	2015-01-24 23:59:25.601802047 +0100
+--- plasma-nm-5.2.0/libs/models/networkmodel.h.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/models/networkmodel.h	2015-01-31 11:51:35.119122875 +0100
 @@ -131,7 +131,7 @@ private:
      void updateFromWimaxNsp(NetworkModelItem * item, const NetworkManager::WimaxNsp::Ptr& nsp);
      void updateFromWirelessNetwork(NetworkModelItem * item, const NetworkManager::WirelessNetwork::Ptr& network);
@@ -351,125 +391,8 @@
  };
  
  #endif // PLASMA_NM_NETWORK_MODEL_H
---- plasma-nm-5.1.95/libs/models/networkmodelitem.h.omv~	2015-01-24 23:55:56.234423311 +0100
-+++ plasma-nm-5.1.95/libs/models/networkmodelitem.h	2015-01-24 23:58:57.616604676 +0100
-@@ -79,8 +79,8 @@ public:
- 
-     QString sectionType() const;
- 
--    NetworkManager::WirelessSecurityType securityType() const;
--    void setSecurityType(NetworkManager::WirelessSecurityType type);
-+    NetworkManager::Utils::WirelessSecurityType securityType() const;
-+    void setSecurityType(NetworkManager::Utils::WirelessSecurityType type);
- 
-     int signal() const;
-     void setSignal(int signal);
-@@ -125,7 +125,7 @@ private:
-     NetworkManager::WirelessSetting::NetworkMode m_mode;
-     QString m_name;
-     QString m_nsp;
--    NetworkManager::WirelessSecurityType m_securityType;
-+    NetworkManager::Utils::WirelessSecurityType m_securityType;
-     int m_signal;
-     bool m_slave;
-     QString m_specificPath;
---- plasma-nm-5.1.95/libs/uiutils.cpp.omv~	2015-01-24 23:43:00.548525194 +0100
-+++ plasma-nm-5.1.95/libs/uiutils.cpp	2015-01-24 23:44:45.728911248 +0100
-@@ -514,32 +514,32 @@ NetworkManager::ModemDevice::Capability
-     return NetworkManager::ModemDevice::NoCapability;
- }
- 
--QString UiUtils::labelFromWirelessSecurity(NetworkManager::WirelessSecurityType type)
-+QString UiUtils::labelFromWirelessSecurity(NetworkManager::Utils::WirelessSecurityType type)
- {
-     QString tip;
-     switch (type) {
--        case NetworkManager::NoneSecurity:
-+        case NetworkManager::Utils::None:
-             tip = i18nc("@label no security", "Insecure");
-             break;
--        case NetworkManager::StaticWep:
-+	case NetworkManager::Utils::StaticWep:
-             tip = i18nc("@label WEP security", "WEP");
-             break;
--        case NetworkManager::Leap:
-+	case NetworkManager::Utils::Leap:
-             tip = i18nc("@label LEAP security", "LEAP");
-             break;
--        case NetworkManager::DynamicWep:
-+	case NetworkManager::Utils::DynamicWep:
-             tip = i18nc("@label Dynamic WEP security", "Dynamic WEP");
-             break;
--        case NetworkManager::WpaPsk:
-+	case NetworkManager::Utils::WpaPsk:
-             tip = i18nc("@label WPA-PSK security", "WPA-PSK");
-             break;
--        case NetworkManager::WpaEap:
-+	case NetworkManager::Utils::WpaEap:
-             tip = i18nc("@label WPA-EAP security", "WPA-EAP");
-             break;
--        case NetworkManager::Wpa2Psk:
-+	case NetworkManager::Utils::Wpa2Psk:
-             tip = i18nc("@label WPA2-PSK security", "WPA2-PSK");
-             break;
--        case NetworkManager::Wpa2Eap:
-+	case NetworkManager::Utils::Wpa2Eap:
-             tip = i18nc("@label WPA2-EAP security", "WPA2-EAP");
-             break;
-         default:
---- plasma-nm-5.1.95/libs/uiutils.h.omv~	2015-01-24 23:24:55.526816400 +0100
-+++ plasma-nm-5.1.95/libs/uiutils.h	2015-01-24 23:25:02.489969981 +0100
-@@ -103,7 +103,7 @@ public:
-     static NetworkManager::ModemDevice::Capability modemSubType(NetworkManager::ModemDevice::Capabilities modemCaps);
-     static QString convertNspTypeToString(NetworkManager::WimaxNsp::NetworkType type);
- 
--    static QString labelFromWirelessSecurity(NetworkManager::WirelessSecurityType type);
-+    static QString labelFromWirelessSecurity(NetworkManager::Utils::WirelessSecurityType type);
- 
-     static QString formatDateRelative(const QDateTime & lastUsed);
-     static QString formatLastUsedDateRelative(const QDateTime & lastUsed);
---- plasma-nm-5.1.95/editor/connectioneditor.cpp.omv~	2015-01-25 00:29:31.398428665 +0100
-+++ plasma-nm-5.1.95/editor/connectioneditor.cpp	2015-01-25 00:29:37.356465691 +0100
-@@ -298,7 +298,7 @@ void ConnectionEditor::addConnection(QAc
-                             if (wifiDev) {
-                                 if (wifiDev->wirelessCapabilities().testFlag(NetworkManager::WirelessDevice::ApCap)) {
-                                     wifiSetting->setMode(NetworkManager::WirelessSetting::Ap);
--                                    wifiSetting->setMacAddress(NetworkManager::macAddressFromString(wifiDev->hardwareAddress()));
-+                                    wifiSetting->setMacAddress(NetworkManager::Utils::macAddressFromString(wifiDev->hardwareAddress()));
-                                 }
-                             }
-                         }
---- plasma-nm-5.1.95/kded/bluetoothmonitor.cpp.omv~	2015-01-25 00:28:08.746987376 +0100
-+++ plasma-nm-5.1.95/kded/bluetoothmonitor.cpp	2015-01-25 00:30:09.279672702 +0100
-@@ -187,7 +187,7 @@ void BluetoothMonitor::addBluetoothConne
-                     foreach (const NetworkManager::Connection::Ptr &con, NetworkManager::listConnections()) {
-                         if (con && con->settings() && con->settings()->connectionType() == NetworkManager::ConnectionSettings::Bluetooth) {
-                             NetworkManager::BluetoothSetting::Ptr btSetting = con->settings()->setting(NetworkManager::Setting::Bluetooth).staticCast<NetworkManager::BluetoothSetting>();
--                            if (btSetting->bluetoothAddress() == NetworkManager::macAddressFromString(bdAddr)) {
-+                            if (btSetting->bluetoothAddress() == NetworkManager::Utils::macAddressFromString(bdAddr)) {
-                                 exists = true;
-                                 break;
-                             }
-@@ -200,7 +200,7 @@ void BluetoothMonitor::addBluetoothConne
-                             connectionSettings.setUuid(NetworkManager::ConnectionSettings::createNewUuid());
-                             connectionSettings.setId(deviceName);
-                             NetworkManager::BluetoothSetting::Ptr btSetting = connectionSettings.setting(NetworkManager::Setting::Bluetooth).staticCast<NetworkManager::BluetoothSetting>();
--                            btSetting->setBluetoothAddress(NetworkManager::macAddressFromString(bdAddr));
-+                            btSetting->setBluetoothAddress(NetworkManager::Utils::macAddressFromString(bdAddr));
-                             btSetting->setProfileType(NetworkManager::BluetoothSetting::Panu);
-                             btSetting->setInitialized(true);
- 
-@@ -219,7 +219,7 @@ void BluetoothMonitor::addBluetoothConne
-                                     connectionSettings.setUuid(NetworkManager::ConnectionSettings::createNewUuid());
-                                     connectionSettings.setId(deviceName);
-                                     NetworkManager::BluetoothSetting::Ptr btSetting = connectionSettings.setting(NetworkManager::Setting::Bluetooth).staticCast<NetworkManager::BluetoothSetting>();
--                                    btSetting->setBluetoothAddress(NetworkManager::macAddressFromString(bdAddr));
-+                                    btSetting->setBluetoothAddress(NetworkManager::Utils::macAddressFromString(bdAddr));
-                                     btSetting->setProfileType(NetworkManager::BluetoothSetting::Dun);
-                                     btSetting->setInitialized(true);
- 
---- plasma-nm-5.1.95/libs/models/networkmodelitem.cpp.omv~	2015-01-25 00:21:43.556509904 +0100
-+++ plasma-nm-5.1.95/libs/models/networkmodelitem.cpp	2015-01-25 00:27:14.705805974 +0100
+--- plasma-nm-5.2.0/libs/models/networkmodelitem.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/models/networkmodelitem.cpp	2015-01-31 11:51:35.120122880 +0100
 @@ -57,7 +57,7 @@ NetworkModelItem::NetworkModelItem(QObje
      , m_deviceState(NetworkManager::Device::UnknownState)
      , m_duplicate(false)
@@ -521,3 +444,80 @@
  {
      m_securityType = type;
  }
+--- plasma-nm-5.2.0/libs/models/networkmodelitem.h.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/models/networkmodelitem.h	2015-01-31 11:51:35.119122875 +0100
+@@ -79,8 +79,8 @@ public:
+ 
+     QString sectionType() const;
+ 
+-    NetworkManager::WirelessSecurityType securityType() const;
+-    void setSecurityType(NetworkManager::WirelessSecurityType type);
++    NetworkManager::Utils::WirelessSecurityType securityType() const;
++    void setSecurityType(NetworkManager::Utils::WirelessSecurityType type);
+ 
+     int signal() const;
+     void setSignal(int signal);
+@@ -125,7 +125,7 @@ private:
+     NetworkManager::WirelessSetting::NetworkMode m_mode;
+     QString m_name;
+     QString m_nsp;
+-    NetworkManager::WirelessSecurityType m_securityType;
++    NetworkManager::Utils::WirelessSecurityType m_securityType;
+     int m_signal;
+     bool m_slave;
+     QString m_specificPath;
+--- plasma-nm-5.2.0/libs/uiutils.cpp.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/uiutils.cpp	2015-01-31 11:51:35.119122875 +0100
+@@ -514,32 +514,32 @@ NetworkManager::ModemDevice::Capability
+     return NetworkManager::ModemDevice::NoCapability;
+ }
+ 
+-QString UiUtils::labelFromWirelessSecurity(NetworkManager::WirelessSecurityType type)
++QString UiUtils::labelFromWirelessSecurity(NetworkManager::Utils::WirelessSecurityType type)
+ {
+     QString tip;
+     switch (type) {
+-        case NetworkManager::NoneSecurity:
++        case NetworkManager::Utils::None:
+             tip = i18nc("@label no security", "Insecure");
+             break;
+-        case NetworkManager::StaticWep:
++	case NetworkManager::Utils::StaticWep:
+             tip = i18nc("@label WEP security", "WEP");
+             break;
+-        case NetworkManager::Leap:
++	case NetworkManager::Utils::Leap:
+             tip = i18nc("@label LEAP security", "LEAP");
+             break;
+-        case NetworkManager::DynamicWep:
++	case NetworkManager::Utils::DynamicWep:
+             tip = i18nc("@label Dynamic WEP security", "Dynamic WEP");
+             break;
+-        case NetworkManager::WpaPsk:
++	case NetworkManager::Utils::WpaPsk:
+             tip = i18nc("@label WPA-PSK security", "WPA-PSK");
+             break;
+-        case NetworkManager::WpaEap:
++	case NetworkManager::Utils::WpaEap:
+             tip = i18nc("@label WPA-EAP security", "WPA-EAP");
+             break;
+-        case NetworkManager::Wpa2Psk:
++	case NetworkManager::Utils::Wpa2Psk:
+             tip = i18nc("@label WPA2-PSK security", "WPA2-PSK");
+             break;
+-        case NetworkManager::Wpa2Eap:
++	case NetworkManager::Utils::Wpa2Eap:
+             tip = i18nc("@label WPA2-EAP security", "WPA2-EAP");
+             break;
+         default:
+--- plasma-nm-5.2.0/libs/uiutils.h.0000~	2015-01-22 11:50:03.000000000 +0100
++++ plasma-nm-5.2.0/libs/uiutils.h	2015-01-31 11:51:35.119122875 +0100
+@@ -103,7 +103,7 @@ public:
+     static NetworkManager::ModemDevice::Capability modemSubType(NetworkManager::ModemDevice::Capabilities modemCaps);
+     static QString convertNspTypeToString(NetworkManager::WimaxNsp::NetworkType type);
+ 
+-    static QString labelFromWirelessSecurity(NetworkManager::WirelessSecurityType type);
++    static QString labelFromWirelessSecurity(NetworkManager::Utils::WirelessSecurityType type);
+ 
+     static QString formatDateRelative(const QDateTime & lastUsed);
+     static QString formatLastUsedDateRelative(const QDateTime & lastUsed);
