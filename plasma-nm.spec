@@ -3,7 +3,7 @@
 
 Summary:	Plasma applet written in QML for managing network connections
 Name:		plasma-nm5
-Version:	5.2.1
+Version:	5.2.2
 Release:	1
 License:	GPLv2+
 Group:		Graphical desktop/KDE
@@ -36,6 +36,16 @@ BuildRequires:	cmake(KF5Init)
 BuildRequires:	cmake(KF5KDELibs4Support)
 BuildRequires:	pkgconfig(NetworkManager) >= 0.9.8
 BuildRequires:	pkgconfig(openconnect) >= 3.99
+BuildRequires:	pkgconfig(mobile-broadband-provider-info)
+BuildRequires:	pkgconfig(ModemManager)
+BuildRequires:	pkgconfig(Qt5Core)
+BuildRequires:	pkgconfig(Qt5DBus)
+BuildRequires:	pkgconfig(Qt5Gui)
+BuildRequires:	pkgconfig(Qt5Network)
+BuildRequires:	pkgconfig(Qt5Qml)
+BuildRequires:	pkgconfig(Qt5Quick)
+BuildRequires:	pkgconfig(Qt5Test)
+BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	ninja
 Requires:	mobile-broadband-provider-info
 Requires:	modemmanager
@@ -71,7 +81,7 @@ the default NetworkManager service.
 
 %build
 # Workaround for clang bug causing a compiler crash
-export CXX=g++
+#export CXX=g++
 %cmake -G Ninja \
 	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
 ninja
