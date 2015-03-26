@@ -9,9 +9,6 @@ License:	GPLv2+
 Group:		Graphical desktop/KDE
 Url:		https://projects.kde.org/projects/playground/network/plasma-nm
 Source0:	ftp://ftp.kde.org/pub/kde/%{stable}/plasma/%{major}/plasma-nm-%{version}.tar.xz
-BuildRequires:	mobile-broadband-provider-info
-BuildRequires:	pkgconfig(libnm-glib)
-BuildRequires:	pkgconfig(libnm-util)
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(KF5ModemManagerQt)
 BuildRequires:	cmake(KF5NetworkManagerQt)
@@ -45,6 +42,9 @@ BuildRequires:	pkgconfig(Qt5Qml)
 BuildRequires:	pkgconfig(Qt5Quick)
 BuildRequires:	pkgconfig(Qt5Test)
 BuildRequires:	pkgconfig(Qt5Widgets)
+BuildRequires:	pkgconfig(libnm)
+BuildRequires:	pkgconfig(libnm-glib)
+BuildRequires:	pkgconfig(libnm-util)
 BuildRequires:	ninja
 Requires:	mobile-broadband-provider-info
 Requires:	modemmanager
