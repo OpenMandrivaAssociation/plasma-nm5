@@ -9,7 +9,6 @@ License:	GPLv2+
 Group:		Graphical desktop/KDE
 Url:		https://projects.kde.org/projects/playground/network/plasma-nm
 Source0:	ftp://ftp.kde.org/pub/kde/%{stable}/plasma/%{major}/plasma-nm-%{version}.tar.xz
-Patch0:		plasma-nm-5.1.95-KF5.6.patch
 BuildRequires:	mobile-broadband-provider-info
 BuildRequires:	pkgconfig(libnm-glib)
 BuildRequires:	pkgconfig(libnm-util)
