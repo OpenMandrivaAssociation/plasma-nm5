@@ -81,7 +81,7 @@ the default NetworkManager service.
 %cmake_kde5
 
 %build
-%ninja
+%ninja -C build
 
 %install
 %ninja_install -C build
