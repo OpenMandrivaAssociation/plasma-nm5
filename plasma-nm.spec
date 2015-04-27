@@ -45,7 +45,6 @@ BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	pkgconfig(libnm)
 BuildRequires:	pkgconfig(libnm-glib)
 BuildRequires:	pkgconfig(libnm-util)
-BuildRequires:	ninja
 Requires:	mobile-broadband-provider-info
 Requires:	modemmanager
 Requires:	networkmanager
@@ -77,16 +76,15 @@ the default NetworkManager service.
 %prep
 %setup -qn plasma-nm-%{version}
 %apply_patches
-
-%build
 # Workaround for clang bug causing a compiler crash
 #export CXX=g++
-%cmake -G Ninja \
-	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
-ninja
+%cmake_kde5
+
+%build
+%ninja
 
 %install
-DESTDIR="%{buildroot}" ninja -C build install
+%ninja_install -C build
 
 %find_lang \
 	kde5-nm-connection-editor \
