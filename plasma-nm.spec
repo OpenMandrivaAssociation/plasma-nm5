@@ -50,6 +50,7 @@ Requires:	modemmanager
 Requires:	networkmanager
 Conflicts:	plasma-applet-networkmanagement
 Conflicts:	knetworkmanager-common
+Conflicts:	plasma-nm < 0.9.3.7
 Obsoletes:	plasma-applet-networkmanagement <= 0.9.0.9-2
 
 %description
