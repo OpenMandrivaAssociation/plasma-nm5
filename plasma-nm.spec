@@ -76,7 +76,7 @@ the default NetworkManager service.
 
 %prep
 %setup -qn plasma-nm-%{version}
-%apply_patches
+%autopatch -p1
 # Workaround for clang bug causing a compiler crash
 #export CXX=g++
 %cmake_kde5
